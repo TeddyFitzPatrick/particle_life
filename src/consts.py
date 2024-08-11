@@ -1,9 +1,11 @@
 import pygame
 pygame.init()
 
-# Screen
+# Monitor Dimensions
 info = pygame.display.Info()
-WINDOW_SIZE = [int(info.current_w/2), int(info.current_h/2)]
+
+# Window Size (Fullscreen, 3/4-screen, 1/2-screen)
+WINDOW_SIZE = [int(info.current_w), int(info.current_h)]
 
 # Colors
 WHITE = (255, 255, 255)
@@ -14,13 +16,7 @@ GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 PURPLE = (157, 0, 255)
 PINK = (255, 192, 203)
+LIGHT_BLUE = (20, 100, 250)
 
-
-# Arbitrary Particle Life Constants
-R_MAX = 100
-R_MIN = 20
-R_ZENITH = (R_MIN + R_MAX) / 2
-
-
-NUM_PARTICLES = 400
+# Particle colors
 P_COLORS = [WHITE, RED, ORANGE, GREEN, BLUE, PURPLE, PINK]
