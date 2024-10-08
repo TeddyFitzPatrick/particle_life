@@ -14,13 +14,13 @@ R_MIN = 20
 R_MAX = 100
 FRICTION = 0.05
 NUM_PARTICLES = 300
-PARTICLE_RADIUS = 2
+PARTICLE_RADIUS = 4
 
 
 def change_selection(selected_button: Button, other_buttons: list[Button]):
     for other_button in other_buttons:
-        other_button.change_text_color(WHITE)
-    selected_button.change_text_color(LIGHT_BLUE)
+        other_button.update_color(WHITE)
+    selected_button.update_color(LIGHT_BLUE)
 
 
 # Returns a randomly-positioned particle with a color from the P_COLOR selection
@@ -50,8 +50,8 @@ def main():
     mouse_clicks = []
 
     # status buttons
-    fps_counter = Button(f'FPS: {int(clock.get_fps())}', 40, 40)
-    particle_count = Button(f'Particles: {NUM_PARTICLES}', 40, 112)
+    fps_counter = Button(f'FPS: {int(clock.get_fps())}', 40, 40, 48, GREEN)
+    particle_count = Button(f'Particles:  {NUM_PARTICLES}', 40, 112, 42)
     status_buttons = [fps_counter, particle_count]
 
     # friction buttons
@@ -63,10 +63,10 @@ def main():
 
     # particle size buttons
     psize_title = Button('Particle Size:', 40, 360, 42)
-    psize_1 = Button('1PX', 40, 420, 36)
-    psize_2 = Button('2PX', 140, 420, 36)
-    psize_3 = Button('3PX', 240, 420, 36)
-    psize_buttons = [psize_title, psize_1, psize_2, psize_3]
+    psize_small = Button('3PX', 40, 420, 36)
+    psize_medium = Button('4PX', 140, 420, 36)
+    psize_large = Button('5PX', 240, 420, 36)
+    psize_buttons = [psize_title, psize_small, psize_medium, psize_large]
 
     # DEBUG, PAUSE, RESTART
     debug = Button('DEBUG', 40, 840, 48)
@@ -91,7 +91,7 @@ def main():
 
     # Select defaults
     change_selection(friction_5, friction_buttons)
-    change_selection(psize_2, psize_buttons)
+    change_selection(psize_medium, psize_buttons)
 
     while True:
         # Calculating particle interactions
@@ -114,14 +114,15 @@ def main():
             # Change R_MIN and R_ZENITH values
             R_MIN = int(10 + percent * 40)
         if max_sliding:
+            # SLIDER X from 60 -> 300
             max_slider_pos[0] = pygame.mouse.get_pos()[0]
             # Bounding
             max_slider_pos[0] = 60 if max_slider_pos[0] < 60 else max_slider_pos[0]
             max_slider_pos[0] = 300 if max_slider_pos[0] > 300 else max_slider_pos[0]
             # Apply slider effects
             percent = (max_slider_pos[0] - 60) / 240
-            # Change R_MIN and R_ZENITH values
-
+            # Change R_MAX and R_ZENITH values
+            R_MAX = int(80 + percent * 40)
 
         # Event handler
         for event in pygame.event.get():
@@ -161,15 +162,15 @@ def main():
                     FRICTION = 0.1
                     change_selection(friction_10, friction_buttons)
                 # particle size buttons
-                elif psize_1.hovering():
-                    PARTICLE_RADIUS = 1
-                    change_selection(psize_1, psize_buttons)
-                elif psize_2.hovering():
-                    PARTICLE_RADIUS = 2
-                    change_selection(psize_2, psize_buttons)
-                elif psize_3.hovering():
+                elif psize_small.hovering():
                     PARTICLE_RADIUS = 3
-                    change_selection(psize_3, psize_buttons)
+                    change_selection(psize_small, psize_buttons)
+                elif psize_medium.hovering():
+                    PARTICLE_RADIUS = 4
+                    change_selection(psize_medium, psize_buttons)
+                elif psize_large.hovering():
+                    PARTICLE_RADIUS = 5
+                    change_selection(psize_large, psize_buttons)
                 # Universal pull
                 mouse_pos = pygame.mouse.get_pos()
                 if mouse_pos[0] > int(WINDOW_SIZE[0] / 5):
@@ -203,6 +204,7 @@ def main():
 
         # Rendering
         window.fill(BLACK)
+
         # Menu Options Bounding Box
         white_bounding_box = pygame.rect.Rect(0, 0, int(WINDOW_SIZE[0] / 5), int(WINDOW_SIZE[1]))
         pygame.draw.rect(window, WHITE, white_bounding_box, 10)
@@ -230,9 +232,11 @@ def main():
                 pygame.draw.circle(window, WHITE, pos, 100, 1)
             if pygame.time.get_ticks() - timestamp > 100:
                 mouse_clicks.pop(index)
+
         # Render particles
         for particle in particles:
             particle.render(window, PARTICLE_RADIUS, show_radius, R_MIN, R_MAX)
+
         # Update screen
         pygame.display.flip()
         # Wait 17 ms
