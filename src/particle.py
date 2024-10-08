@@ -19,7 +19,8 @@ class Particle:
         self.position = list(initial_position)
         self.velocity = list(velocity)
 
-    def apply_force(self, particles, matrix, R_MIN, R_ZENITH, R_MAX):
+    def apply_force(self, particles, matrix, R_MIN, R_MAX):
+        R_ZENITH = int((R_MIN + R_MAX) / 2)
         for particle in particles:
             if fabs(particle.position[0] - self.position[0]) > R_MAX:
                 continue
@@ -66,7 +67,8 @@ class Particle:
     def dampen(self, factor):
         return self.color[0] / factor, self.color[1] / factor, self.color[2] / factor
 
-    def render(self, window, particle_radius, show_radius=False, R_MIN=0, R_ZENITH=0, R_MAX=0):
+    def render(self, window, particle_radius, show_radius=False, R_MIN=0, R_MAX=0):
+        R_ZENITH = int((R_MIN + R_MAX) / 2)
         pygame.draw.circle(window, self.color, self.position, particle_radius)
         if show_radius:
             pygame.draw.circle(window, RED, self.position, R_MIN, 1)

@@ -20,3 +20,6 @@ LIGHT_BLUE = (20, 100, 250)
 
 # Particle colors
 P_COLORS = [WHITE, RED, ORANGE, GREEN, BLUE, PURPLE, PINK]
+
+# Font
+def_font = pygame.font.Font(pygame.font.get_default_font(), 36)
